@@ -3,6 +3,7 @@
 namespace Kaishiyoku\AnimexxApi\Models;
 
 use Illuminate\Support\Collection;
+use function Kaishiyoku\AnimexxApi\filterInt;
 
 class User
 {
@@ -87,4 +88,16 @@ class User
      * @var string
      */
     private $updated;
+
+    public static function fromJson($json)
+    {
+        $attributes = $json['attributes'];
+
+        $user = new User();
+        $user->id = $attributes['_id'];
+        $user->legacyId = $attributes['legacyId'];
+        $user->username = $attributes['username'];
+
+        return $user;
+    }
 }

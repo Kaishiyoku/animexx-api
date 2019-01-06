@@ -1,9 +1,5 @@
 <?php
-/**
- * This file is part of the Kaishiyoku.AnimexxApi
- *
- * @license http://opensource.org/licenses/MIT MIT
- */
+
 namespace Kaishiyoku\AnimexxApi;
 
 use PHPUnit\Framework\TestCase;
@@ -24,5 +20,13 @@ class AnimexxApiTest extends TestCase
     {
         $actual = $this->animexxApi;
         $this->assertInstanceOf(AnimexxApi::class, $actual);
+    }
+
+    public function testFetchUsers()
+    {
+        $animexxApi = new AnimexxApi();
+        $userResponse = $animexxApi->fetchUsers(1);
+
+        $this->assertEquals($userResponse->getMeta()->getItemsPerPage(), $userResponse->getUsers()->count());
     }
 }
