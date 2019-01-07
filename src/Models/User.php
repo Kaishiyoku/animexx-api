@@ -55,7 +55,7 @@ class User
     private $events;
 
     /**
-     * @var Collection<EventSeries>
+     * @var Collection<SerialEvent>
      */
     private $subscribedEventSeries;
 
@@ -89,7 +89,11 @@ class User
      */
     private $updated;
 
-    public static function fromJson($json)
+    /**
+     * @param array $json
+     * @return User
+     */
+    public static function fromJson(array $json): User
     {
         $attributes = $json['attributes'];
 

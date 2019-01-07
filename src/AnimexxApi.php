@@ -6,7 +6,8 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Kaishiyoku\AnimexxApi\Exception\RequestException;
 use Kaishiyoku\AnimexxApi\Models\User;
-use Kaishiyoku\AnimexxApi\Responses\UserResponse;
+use Kaishiyoku\AnimexxApi\Responses\SerialEventsResponse;
+use Kaishiyoku\AnimexxApi\Responses\UsersResponse;
 
 class AnimexxApi
 {
@@ -24,14 +25,14 @@ class AnimexxApi
 
     /**
      * @param int $page
-     * @return UserResponse
+     * @return UsersResponse
      * @throws GuzzleException
      */
-    public function fetchUsers(int $page): UserResponse
+    public function fetchUsers(int $page): UsersResponse
     {
         $json = $this->fetchResource('get', '/users/?page=' . $page);
 
-        return UserResponse::fromJson($json);
+        return UsersResponse::fromJson($json);
     }
 
     /**
@@ -44,6 +45,24 @@ class AnimexxApi
         $json = $this->fetchResource('get', '/users/' . $id);
 
         return User::fromJson($json['data']);
+    }
+
+    /**
+     * @param int $page
+     * @return SerialEventsResponse
+     * @throws GuzzleException
+     */
+    public function fetchSerialEvents(int $page): SerialEventsResponse
+    {
+        // TODO: add filter ability:
+        //       - id
+        //       - id[]
+        //       - slug
+        //       - sluig[]
+        //       - city
+        $json = $this->fetchResource('get', '/event-series/?page=' . $page);
+
+        return SerialEventsResponse::fromJson($json, $this);
     }
 
     /**

@@ -7,7 +7,7 @@ use Kaishiyoku\AnimexxApi\Models\Misc\Meta;
 use Kaishiyoku\AnimexxApi\Models\User;
 use Kaishiyoku\AnimexxApi\Responses\Traits\WithMeta;
 
-class UserResponse
+class UsersResponse
 {
     use WithMeta;
 
@@ -18,11 +18,11 @@ class UserResponse
 
     /**
      * @param array $json
-     * @return UserResponse
+     * @return UsersResponse
      */
-    public static function fromJson(array $json): UserResponse
+    public static function fromJson(array $json): UsersResponse
     {
-        $userResponse = new UserResponse();
+        $userResponse = new UsersResponse();
         $userResponse->meta = Meta::fromJson($json['meta']);
 
         $users = new Collection();

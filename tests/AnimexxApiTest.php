@@ -19,7 +19,6 @@ class AnimexxApiTest extends TestCase
     }
 
     public function testIsInstanceOfAnimexxApi()
-
     {
         $actual = $this->animexxApi;
         $this->assertInstanceOf(AnimexxApi::class, $actual);
@@ -34,7 +33,7 @@ class AnimexxApiTest extends TestCase
 
     public function testFetchUsersInvalidPage()
     {
-        $userResponse  =$this->animexxApi->fetchUsers(9000000);
+        $userResponse = $this->animexxApi->fetchUsers(9000000);
 
         $this->assertCount(0, $userResponse->getUsers());
     }
@@ -57,5 +56,19 @@ class AnimexxApiTest extends TestCase
         $this->expectException(ClientException::class);
 
         $this->animexxApi->fetchUser(-1);
+    }
+
+    public function testFetchSerialEvents()
+    {
+        $serialEventsResponse = $this->animexxApi->fetchSerialEvents(1);
+
+        $this->assertEquals($serialEventsResponse->getMeta()->getItemsPerPage(), $serialEventsResponse->getSerialEvents()->count());
+    }
+
+    public function testFetchSerialEventsInvalidPage()
+    {
+        $serialEventsResponse = $this->animexxApi->fetchSerialEvents(9000000);
+
+        $this->assertCount(0, $serialEventsResponse->getSerialEvents());
     }
 }
