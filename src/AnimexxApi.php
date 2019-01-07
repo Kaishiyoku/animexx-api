@@ -35,6 +35,18 @@ class AnimexxApi
     }
 
     /**
+     * @param int $id
+     * @return User
+     * @throws GuzzleException
+     */
+    public function fetchUser(int $id): User
+    {
+        $json = $this->fetchResource('get', '/users/' . $id);
+
+        return User::fromJson($json['data']);
+    }
+
+    /**
      * @param string $method
      * @param string $path
      * @return array
@@ -44,11 +56,7 @@ class AnimexxApi
     {
         $response = $this->httpClient->request($method, $this->getUrlFor($path));
 
-        if ($response->getStatusCode() == 200) {
-            return json_decode($response->getBody(), true);
-        }
-
-        throw new RequestException($response->getStatusCode());
+        return json_decode($response->getBody(), true);
     }
 
     /**

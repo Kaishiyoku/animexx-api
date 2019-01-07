@@ -23,7 +23,7 @@ class User
     private $isActive;
 
     /**
-     * @var @string
+     * @var string
      */
     private $username;
 
@@ -99,5 +99,29 @@ class User
         $user->username = $attributes['username'];
 
         return $user;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return int
+     */
+    public function getLegacyId(): int
+    {
+        return $this->legacyId;
+    }
+
+    /**
+     * @return string
+     */
+    public function getUsername(): string
+    {
+        return $this->username;
     }
 }

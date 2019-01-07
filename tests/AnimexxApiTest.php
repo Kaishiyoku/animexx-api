@@ -2,6 +2,8 @@
 
 namespace Kaishiyoku\AnimexxApi;
 
+use GuzzleHttp\Exception\ClientException;
+use Kaishiyoku\AnimexxApi\Exception\RequestException;
 use PHPUnit\Framework\TestCase;
 
 class AnimexxApiTest extends TestCase
@@ -17,6 +19,7 @@ class AnimexxApiTest extends TestCase
     }
 
     public function testIsInstanceOfAnimexxApi()
+
     {
         $actual = $this->animexxApi;
         $this->assertInstanceOf(AnimexxApi::class, $actual);
@@ -27,5 +30,32 @@ class AnimexxApiTest extends TestCase
         $userResponse = $this->animexxApi->fetchUsers(1);
 
         $this->assertEquals($userResponse->getMeta()->getItemsPerPage(), $userResponse->getUsers()->count());
+    }
+
+    public function testFetchUsersInvalidPage()
+    {
+        $userResponse  =$this->animexxApi->fetchUsers(9000000);
+
+        $this->assertCount(0, $userResponse->getUsers());
+    }
+
+    public function testFetchUser()
+    {
+        $id = 16357;
+        $legacyId = 986273;
+        $username = 'Kaishiyoku';
+
+        $user = $this->animexxApi->fetchUser($id);
+
+        $this->assertEquals($id, $user->getId());
+        $this->assertEquals($legacyId, $user->getLegacyId());
+        $this->assertEquals($username, $user->getUsername());
+    }
+    
+    public function testFetchUserInvalidId()
+    {
+        $this->expectException(ClientException::class);
+
+        $this->animexxApi->fetchUser(-1);
     }
 }
