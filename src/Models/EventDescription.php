@@ -45,4 +45,13 @@ class EventDescription
      * @var string
      */
     private $title;
+
+    /**
+     * @param array $json
+     * @return EventDescription
+     */
+    public static function fromJson(array $json): EventDescription
+    {
+        // TODO: Implement fromJson() method.
+    }
 }

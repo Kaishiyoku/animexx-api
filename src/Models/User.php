@@ -3,7 +3,6 @@
 namespace Kaishiyoku\AnimexxApi\Models;
 
 use Illuminate\Support\Collection;
-use function Kaishiyoku\AnimexxApi\filterInt;
 
 class User
 {

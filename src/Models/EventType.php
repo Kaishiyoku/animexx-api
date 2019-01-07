@@ -45,4 +45,44 @@ class EventType
      * @var int
      */
     private $legacyId;
+
+    /**
+     * @param array $json
+     * @return EventType
+     */
+    public static function fromJson(array $json): EventType
+    {
+        $attributes = $json['attributes'];
+
+        $eventType = new EventType();
+        $eventType->id = $attributes['_id'];
+        $eventType->title = $attributes['title'];
+        $eventType->description = $attributes['description'];
+
+        return $eventType;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getTitle(): string
+    {
+        return $this->title;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDescription(): string
+    {
+        return $this->description;
+    }
 }

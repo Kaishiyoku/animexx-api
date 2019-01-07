@@ -6,6 +6,7 @@ use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Kaishiyoku\AnimexxApi\Exception\RequestException;
 use Kaishiyoku\AnimexxApi\Models\User;
+use Kaishiyoku\AnimexxApi\Responses\EventTypesResponse;
 use Kaishiyoku\AnimexxApi\Responses\SerialEventsResponse;
 use Kaishiyoku\AnimexxApi\Responses\UsersResponse;
 
@@ -63,6 +64,18 @@ class AnimexxApi
         $json = $this->fetchResource('get', '/event-series/?page=' . $page);
 
         return SerialEventsResponse::fromJson($json, $this);
+    }
+
+    /**
+     * @param int $page
+     * @return EventTypesResponse
+     * @throws GuzzleException
+     */
+    public function fetchEventTypes(int $page): EventTypesResponse
+    {
+        $json = $this->fetchResource('get', '/event-types?page=' . $page);
+
+        return EventTypesResponse::fromJson($json);
     }
 
     /**

@@ -46,14 +46,6 @@ class SerialEventsResponse
     }
 
     /**
-     * @param Collection $serialEvents
-     */
-    public function setSerialEvents(Collection $serialEvents): void
-    {
-        $this->serialEvents = $serialEvents;
-    }
-
-    /**
      * @return Meta
      */
     public function getMeta(): Meta

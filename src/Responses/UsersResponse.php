@@ -45,14 +45,6 @@ class UsersResponse
     }
 
     /**
-     * @param Collection $users
-     */
-    public function setUsers(Collection $users): void
-    {
-        $this->users = $users;
-    }
-
-    /**
      * @return Meta
      */
     public function getMeta(): Meta

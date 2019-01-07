@@ -71,4 +71,19 @@ class AnimexxApiTest extends TestCase
 
         $this->assertCount(0, $serialEventsResponse->getSerialEvents());
     }
+
+    public function testFetchEventTypes()
+    {
+        $eventTypesResponse = $this->animexxApi->fetchEventTypes(1);
+        $expected = $eventTypesResponse->getMeta()->getTotalItems() < $eventTypesResponse->getMeta()->getItemsPerPage() ? $eventTypesResponse->getMeta()->getTotalItems() : $eventTypesResponse->getMeta()->getItemsPerPage();
+
+        $this->assertEquals($expected, $eventTypesResponse->getEventTypes()->count());
+    }
+
+    public function testFetchEventTypesInvalidPage()
+    {
+        $eventTypesResponse = $this->animexxApi->fetchEventTypes(9000000);
+
+        $this->assertCount(0, $eventTypesResponse->getEventTypes());
+    }
 }

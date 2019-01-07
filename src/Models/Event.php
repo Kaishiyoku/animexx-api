@@ -302,4 +302,13 @@ class Event
      * @var int
      */
     private $geoType;
+
+    /**
+     * @param array $json
+     * @return Event
+     */
+    public static function fromJson(array $json): Event
+    {
+        // TODO: Implement fromJson() method.
+    }
 }
