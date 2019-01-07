@@ -26,7 +26,8 @@ class SerialEventsResponse
     }
 
     /**
-     * @param array $json
+     * @param array      $json
+     * @param AnimexxApi $animexxApi
      * @return SerialEventsResponse
      */
     public static function fromJson(array $json, AnimexxApi $animexxApi): SerialEventsResponse

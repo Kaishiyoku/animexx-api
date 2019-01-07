@@ -14,14 +14,11 @@ class AnimexxApi
 {
     private const BASE_URL = 'https://rewind.animexx.de/api';
 
-    /**
-     * @var Client
-     */
-    private $httpClient;
+    private $httpFetcher;
 
     public function __construct()
     {
-        $this->httpClient = new Client();
+        $this->httpFetcher = new HttpFetcher(self::BASE_URL);
     }
 
     /**
@@ -31,7 +28,7 @@ class AnimexxApi
      */
     public function fetchUsers(int $page): UsersResponse
     {
-        $json = $this->fetchResource('get', '/users/?page=' . $page);
+        $json = $this->httpFetcher->fetchResource('get', '/users/?page=' . $page);
 
         return UsersResponse::fromJson($json);
     }
@@ -43,7 +40,7 @@ class AnimexxApi
      */
     public function fetchUser(int $id): User
     {
-        $json = $this->fetchResource('get', '/users/' . $id);
+        $json = $this->httpFetcher->fetchResource('get', '/users/' . $id);
 
         return User::fromJson($json['data']);
     }
@@ -61,7 +58,7 @@ class AnimexxApi
         //       - slug
         //       - sluig[]
         //       - city
-        $json = $this->fetchResource('get', '/event-series/?page=' . $page);
+        $json = $this->httpFetcher->fetchResource('get', '/event-series/?page=' . $page);
 
         return SerialEventsResponse::fromJson($json, $this);
     }
@@ -73,30 +70,8 @@ class AnimexxApi
      */
     public function fetchEventTypes(int $page): EventTypesResponse
     {
-        $json = $this->fetchResource('get', '/event-types?page=' . $page);
+        $json = $this->httpFetcher->fetchResource('get', '/event-types?page=' . $page);
 
         return EventTypesResponse::fromJson($json);
-    }
-
-    /**
-     * @param string $method
-     * @param string $path
-     * @return array
-     * @throws GuzzleException
-     */
-    private function fetchResource(string $method, string $path): array
-    {
-        $response = $this->httpClient->request($method, $this->getUrlFor($path));
-
-        return json_decode($response->getBody(), true);
-    }
-
-    /**
-     * @param string $path
-     * @return string
-     */
-    private function getUrlFor(string $path) : string
-    {
-        return self::BASE_URL . $path;
     }
 }
