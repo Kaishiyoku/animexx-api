@@ -3,6 +3,7 @@
 namespace Kaishiyoku\AnimexxApi;
 
 use GuzzleHttp\Client;
+use GuzzleHttp\Exception\GuzzleException;
 use Kaishiyoku\AnimexxApi\Exception\RequestException;
 use Kaishiyoku\AnimexxApi\Models\User;
 use Kaishiyoku\AnimexxApi\Responses\UserResponse;
@@ -24,6 +25,7 @@ class AnimexxApi
     /**
      * @param int $page
      * @return UserResponse
+     * @throws GuzzleException
      */
     public function fetchUsers(int $page): UserResponse
     {
@@ -33,32 +35,10 @@ class AnimexxApi
     }
 
     /**
-     * @return UserResponse
-     */
-    public function fetchAllUsers(): UserResponse
-    {
-        $userResponse = $this->fetchUsers(1);
-
-        for ($page = 2; $page <= $userResponse->getMeta()->getLastPage(); $page++) {
-            $users = $userResponse->getUsers();
-
-            $currentUserResponse = $this->fetchUsers($page);
-
-            $currentUserResponse->getUsers()->each(function (User $user) use (&$users) {
-                $users->push($user);
-            });
-
-            $userResponse->setUsers($users);
-        }
-
-        return $userResponse;
-    }
-
-    /**
      * @param string $method
      * @param string $path
      * @return array
-     * @throws \GuzzleHttp\Exception\GuzzleException
+     * @throws GuzzleException
      */
     private function fetchResource(string $method, string $path): array
     {

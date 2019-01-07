@@ -24,8 +24,7 @@ class AnimexxApiTest extends TestCase
 
     public function testFetchUsers()
     {
-        $animexxApi = new AnimexxApi();
-        $userResponse = $animexxApi->fetchUsers(1);
+        $userResponse = $this->animexxApi->fetchUsers(1);
 
         $this->assertEquals($userResponse->getMeta()->getItemsPerPage(), $userResponse->getUsers()->count());
     }
