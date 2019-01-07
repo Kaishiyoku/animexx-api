@@ -18,6 +18,14 @@ class SerialEventsResponse
     private $serialEvents;
 
     /**
+     * SerialEventsResponse constructor.
+     */
+    public function __construct()
+    {
+        $this->serialEvents = new Collection();
+    }
+
+    /**
      * @param array $json
      * @return SerialEventsResponse
      */

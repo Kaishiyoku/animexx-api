@@ -5,6 +5,7 @@ namespace Kaishiyoku\AnimexxApi\Models;
 use Illuminate\Support\Collection;
 
 class User
+
 {
     /**
      * @var int
@@ -87,6 +88,17 @@ class User
      * @var string
      */
     private $updated;
+
+    /**
+     * User constructor.
+     */
+    public function __construct()
+    {
+        $this->events = new Collection();
+        $this->subscribedEventSeries = new Collection();
+        $this->subscribedEvent = new Collection();
+        $this->interestedEvents = new Collection();
+    }
 
     /**
      * @param array $json

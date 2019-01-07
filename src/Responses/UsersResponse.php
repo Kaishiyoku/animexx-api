@@ -17,6 +17,14 @@ class UsersResponse
     private $users;
 
     /**
+     * UsersResponse constructor.
+     */
+    public function __construct()
+    {
+        $this->users = new Collection();
+    }
+
+    /**
      * @param array $json
      * @return UsersResponse
      */

@@ -47,6 +47,15 @@ class EventType
     private $legacyId;
 
     /**
+     * EventType constructor.
+     */
+    public function __construct()
+    {
+        $this->events = new Collection();
+        $this->eventSeries = new Collection();
+    }
+
+    /**
      * @param array $json
      * @return EventType
      */

@@ -16,6 +16,11 @@ class EventTypesResponse
      */
     private $eventTypes;
 
+    public function __construct()
+    {
+        $this->eventTypes = new Collection();
+    }
+
     /**
      * @param array $json
      * @return EventTypesResponse

@@ -47,6 +47,14 @@ class EventDescription
     private $title;
 
     /**
+     * EventDescription constructor.
+     */
+    public function __construct()
+    {
+        $this->eventDescriptionDocuments = new Collection();
+    }
+
+    /**
      * @param array $json
      * @return EventDescription
      */

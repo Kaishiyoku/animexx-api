@@ -304,6 +304,24 @@ class Event
     private $geoType;
 
     /**
+     * Event constructor.
+     */
+    public function __construct()
+    {
+        $this->participants = new Collection();
+        $this->interested = new Collection();
+        $this->subEvents = new Collection();
+        $this->userGroups = new Collection();
+        $this->carpoolOffers = new Collection();
+        $this->carpoolRequests = new Collection();
+        $this->accommodationOffers = new Collection();
+        $this->admins = new Collection();
+        $this->descriptions = new Collection();
+        $this->eventStaff = new Collection();
+        $this->eventEns = new Collection();
+    }
+
+    /**
      * @param array $json
      * @return Event
      */
