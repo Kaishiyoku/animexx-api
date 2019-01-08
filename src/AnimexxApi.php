@@ -2,9 +2,9 @@
 
 namespace Kaishiyoku\AnimexxApi;
 
-use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Kaishiyoku\AnimexxApi\Exception\RequestException;
+use Kaishiyoku\AnimexxApi\Models\EventType;
 use Kaishiyoku\AnimexxApi\Models\SerialEvent;
 use Kaishiyoku\AnimexxApi\Models\User;
 use Kaishiyoku\AnimexxApi\Responses\EventTypesResponse;
@@ -86,5 +86,17 @@ class AnimexxApi
         $json = $this->httpFetcher->fetchResource('get', '/event-types?page=' . $page);
 
         return EventTypesResponse::fromJson($json);
+    }
+
+    /**
+     * @param int $id
+     * @return EventType
+     * @throws GuzzleException
+     */
+    public function fetchEventType(int $id) : EventType
+    {
+        $json = $this->httpFetcher->fetchResource('get', '/event-types/' . $id);
+
+        return EventType::fromJson($json['data']);
     }
 }

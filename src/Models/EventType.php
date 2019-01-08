@@ -17,7 +17,7 @@ class EventType
     private $title;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $description;
 
@@ -88,9 +88,9 @@ class EventType
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDescription(): string
+    public function getDescription()
     {
         return $this->description;
     }

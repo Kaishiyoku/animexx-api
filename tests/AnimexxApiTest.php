@@ -151,4 +151,24 @@ class AnimexxApiTest extends TestCase
 
         $this->assertCount(0, $eventTypesResponse->getEventTypes());
     }
+
+    public function testFetchEventType()
+    {
+        $id = 6;
+        $title = 'Messe / Großveranstaltung';
+        $description = null;
+
+        $eventType = $this->animexxApi->fetchEventType($id);
+
+        $this->assertEquals($id, $eventType->getId());
+        $this->assertEquals($title, $eventType->getTitle());
+        $this->assertEquals($description, $eventType->getDescription());
+    }
+
+    public function testFetchEventTypeInvalidId()
+    {
+        $this->expectException(ClientException::class);
+
+        $this->animexxApi->fetchEventType(-1);
+    }
 }
