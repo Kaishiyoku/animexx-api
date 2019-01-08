@@ -3,11 +3,15 @@
 namespace Kaishiyoku\AnimexxApi;
 
 use GuzzleHttp\Exception\ClientException;
+use Illuminate\Support\Collection;
 use Kaishiyoku\AnimexxApi\Exception\RequestException;
 use PHPUnit\Framework\TestCase;
+use Spatie\Snapshots\MatchesSnapshots;
 
 class AnimexxApiTest extends TestCase
 {
+    use MatchesSnapshots;
+    
     /**
      * @var AnimexxApi
      */
@@ -70,6 +74,67 @@ class AnimexxApiTest extends TestCase
         $serialEventsResponse = $this->animexxApi->fetchSerialEvents(9000000);
 
         $this->assertCount(0, $serialEventsResponse->getSerialEvents());
+    }
+
+    public function testFetchSerialEvent()
+    {
+        $id = 2154;
+        $subscribers = new Collection();
+        $admins = new Collection();
+        $title = 'Animexx-Treffen Bayreuth';
+        $city = 'Bayreuth';
+        $website = '';
+        $contactId = 308397;
+        $attendees = '3-50';
+        $period = '3';
+        $slug = 'animexx-treffen-bayreuth';
+        $legacyId = 2154;
+        $isPassive = false;
+        $created = '14.12.2018 19:44:51';
+        $updated = '05.01.2019 10:15:59';
+        $isAnimexx = false;
+        $isHasGamesroom = false;
+        $isHasKaraoke = false;
+        $isHasCatering = false;
+        $isHasCompetition = false;
+        $isPublished = true;
+        $isBanned = false;
+        $status = 0;
+
+        $serialEvent = $this->animexxApi->fetchSerialEvent($id);
+
+        $this->assertEquals($id, $serialEvent->getId());
+        $this->assertEquals($subscribers, $serialEvent->getSubscribers());
+        $this->assertEquals($admins, $serialEvent->getAdmins());
+        $this->assertEquals($title, $serialEvent->getTitle());
+        $this->assertEquals($city, $serialEvent->getCity());
+        $this->assertEquals($website, $serialEvent->getWebsite());
+        $this->assertEquals($contactId, $serialEvent->getContactId());
+
+        $this->assertMatchesSnapshot($serialEvent->getDescription());
+
+        $this->assertEquals($attendees, $serialEvent->getAttendees());
+        $this->assertEquals($period, $serialEvent->getPeriod());
+        $this->assertEquals($slug, $serialEvent->getSlug());
+        $this->assertEquals($legacyId, $serialEvent->getLegacyId());
+        $this->assertEquals($isPassive, $serialEvent->isPassive());
+        $this->assertEquals($created, $serialEvent->getCreated());
+        $this->assertEquals($updated, $serialEvent->getUpdated());
+        $this->assertEquals($isAnimexx, $serialEvent->isAnimexx());
+        $this->assertEquals($isHasGamesroom, $serialEvent->isHasGamesroom());
+        $this->assertEquals($isHasKaraoke, $serialEvent->isHasKaraoke());
+        $this->assertEquals($isHasCatering, $serialEvent->isHasCatering());
+        $this->assertEquals($isHasCompetition, $serialEvent->isHasCompetition());
+        $this->assertEquals($isPublished, $serialEvent->isPublished());
+        $this->assertEquals($isBanned, $serialEvent->isBanned());
+        $this->assertEquals($status, $serialEvent->getStatus());
+    }
+
+    public function testFetchSerialEventInvalidId()
+    {
+        $this->expectException(ClientException::class);
+
+        $this->animexxApi->fetchSerialEvent(-1);
     }
 
     public function testFetchEventTypes()

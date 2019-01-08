@@ -5,6 +5,7 @@ namespace Kaishiyoku\AnimexxApi;
 use GuzzleHttp\Client;
 use GuzzleHttp\Exception\GuzzleException;
 use Kaishiyoku\AnimexxApi\Exception\RequestException;
+use Kaishiyoku\AnimexxApi\Models\SerialEvent;
 use Kaishiyoku\AnimexxApi\Models\User;
 use Kaishiyoku\AnimexxApi\Responses\EventTypesResponse;
 use Kaishiyoku\AnimexxApi\Responses\SerialEventsResponse;
@@ -61,6 +62,18 @@ class AnimexxApi
         $json = $this->httpFetcher->fetchResource('get', '/event-series/?page=' . $page);
 
         return SerialEventsResponse::fromJson($json, $this);
+    }
+
+    /**
+     * @param int $id
+     * @return SerialEvent
+     * @throws GuzzleException
+     */
+    public function fetchSerialEvent(int $id): SerialEvent
+    {
+        $json = $this->httpFetcher->fetchResource('get', '/event-series/' . $id);
+
+        return SerialEvent::fromJson($json['data'], $this);
     }
 
     /**

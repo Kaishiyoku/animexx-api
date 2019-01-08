@@ -23,14 +23,14 @@ class SerialEvent
     private $city;
 
     /**
-     * @var string
+     * @var string|null
      */
     private $website;
 
     /**
-     * @var string
+     * @var int
      */
-    private $contact;
+    private $contactId;
 
     /**
      * @var string
@@ -158,7 +158,7 @@ class SerialEvent
         $serialEvent->title = $attributes['title'];
         $serialEvent->city = $attributes['city'];
         $serialEvent->website = $attributes['website'];
-        $serialEvent->contact = $attributes['contact'];
+        $serialEvent->contactId = filterInt($attributes['contact']);
         $serialEvent->description = $attributes['description'];
         $serialEvent->attendees = $attributes['attendees'];
         $serialEvent->period = $attributes['period'];
@@ -236,19 +236,19 @@ class SerialEvent
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getWebsite(): string
+    public function getWebsite()
     {
         return $this->website;
     }
 
     /**
-     * @return string
+     * @return int
      */
-    public function getContact(): string
+    public function getContactId(): int
     {
-        return $this->contact;
+        return $this->contactId;
     }
 
     /**

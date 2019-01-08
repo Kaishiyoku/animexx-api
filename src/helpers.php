@@ -2,12 +2,18 @@
 
 if (!function_exists('filterInt')) {
     /**
-     * @param string $str
+     * @param string|null $str
      * @return int
      */
-    function filterInt(string $str): int
+    function filterInt($str)
     {
-        return filter_var($str, FILTER_SANITIZE_NUMBER_INT);
+        preg_match("/[-0-9]+/", $str, $matches);
+
+        if (count($matches) == 0) {
+            return null;
+        }
+
+        return $matches[0];
     }
 }
 
