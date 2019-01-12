@@ -185,4 +185,20 @@ class AnimexxApiTest extends TestCase
 
         $this->assertCount(0, $eventDescriptionsResponse->getEventDescriptions());
     }
+
+    public function testFetchEventDescription()
+    {
+        $id = 12958;
+
+        $eventDescription = $this->animexxApi->fetchEventDescription($id);
+
+        $this->assertEquals($id, $eventDescription->getId());
+    }
+
+    public function testFetchEventDescriptionInvalidId()
+    {
+        $this->expectException(ClientException::class);
+
+        $this->animexxApi->fetchEventDescription(-1);
+    }
 }
