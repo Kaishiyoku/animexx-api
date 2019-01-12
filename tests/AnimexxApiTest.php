@@ -171,4 +171,18 @@ class AnimexxApiTest extends TestCase
 
         $this->animexxApi->fetchEventType(-1);
     }
+
+    public function testFetchEventDescriptions()
+    {
+        $eventDescriptionsResponse = $this->animexxApi->fetchEventDescriptions(1);
+
+        $this->assertEquals($eventDescriptionsResponse->getMeta()->getItemsPerPage(), $eventDescriptionsResponse->getEventDescriptions()->count());
+    }
+
+    public function testFetchEventDescriptionsInvalidPage()
+    {
+        $eventDescriptionsResponse = $this->animexxApi->fetchEventDescriptions(9000000);
+
+        $this->assertCount(0, $eventDescriptionsResponse->getEventDescriptions());
+    }
 }

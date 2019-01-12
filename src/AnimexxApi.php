@@ -7,6 +7,7 @@ use Kaishiyoku\AnimexxApi\Exception\RequestException;
 use Kaishiyoku\AnimexxApi\Models\EventType;
 use Kaishiyoku\AnimexxApi\Models\SerialEvent;
 use Kaishiyoku\AnimexxApi\Models\User;
+use Kaishiyoku\AnimexxApi\Responses\EventDescriptionsResponse;
 use Kaishiyoku\AnimexxApi\Responses\EventTypesResponse;
 use Kaishiyoku\AnimexxApi\Responses\SerialEventsResponse;
 use Kaishiyoku\AnimexxApi\Responses\UsersResponse;
@@ -98,5 +99,12 @@ class AnimexxApi
         $json = $this->httpFetcher->fetchResource('get', '/event-types/' . $id);
 
         return EventType::fromJson($json['data']);
+    }
+
+    public function fetchEventDescriptions(int $page) : EventDescriptionsResponse
+    {
+        $json = $this->httpFetcher->fetchResource('get', '/event-descriptions?page=' . $page);
+
+        return EventDescriptionsResponse::fromJson($json, $this);
     }
 }
