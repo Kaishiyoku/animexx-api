@@ -3,6 +3,7 @@
 namespace Kaishiyoku\AnimexxApi\Models;
 
 use Illuminate\Support\Collection;
+use Kaishiyoku\AnimexxApi\AnimexxApi;
 
 class Event
 {
@@ -322,11 +323,206 @@ class Event
     }
 
     /**
-     * @param array $json
+     * @param array      $json
+     * @param AnimexxApi $animexxApi
      * @return Event
+     * @throws \GuzzleHttp\Exception\GuzzleException
      */
-    public static function fromJson(array $json): Event
+    public static function fromJson(array $json, AnimexxApi $animexxApi): Event
     {
-        // TODO: Implement fromJson() method.
+        $attributes = $json['attributes'];
+        $relationships = $json['relationships'];
+
+        $event = new Event();
+        $event->id = $attributes['_id'];
+        $event->name = $attributes['name'];
+        $event->slug = $attributes['slug'];
+        $event->dateStart = $attributes['dateStart'];
+        $event->dateEnd = $attributes['dateEnd'];
+        $event->address = $attributes['address'];
+        $event->zip = $attributes['zip'];
+        $event->city = $attributes['city'];
+        $event->state = $attributes['state'];
+        $event->host = $attributes['host'];
+        $event->contact = $attributes['contact'];
+        $event->isFeatured = $attributes['isFeatured'];
+        $event->hashtags = $attributes['hashtags'];
+        $event->isCancelled = $attributes['isCancelled'];
+        $event->duration = $attributes['duration'];
+        $event->attendees = $attributes['attendees'];
+        $event->website = $attributes['website'];
+        $event->intro = $attributes['intro'];
+
+        $event->type = $animexxApi->fetchEventType(filterInt($relationships['_type']['data']['id']));
+
+        $userIdMapper = function ($item) use ($animexxApi) {
+            return $animexxApi->fetchUser(filterInt($item['id']));
+        };
+
+        callIfKeyExists(function () use (&$event, &$userIdMapper, &$relationships) {
+            $event->participants = new Collection(arrMap($userIdMapper, $relationships['participants']['data']));
+        }, 'participants', $relationships);
+
+        return $event;
+    }
+
+    /**
+     * @return EventType
+     */
+    public function getType(): EventType
+    {
+        return $this->type;
+    }
+
+    /**
+     * @return int
+     */
+    public function getId(): int
+    {
+        return $this->id;
+    }
+
+    /**
+     * @return string
+     */
+    public function getName(): string
+    {
+        return $this->name;
+    }
+
+    /**
+     * @return string
+     */
+    public function getSlug(): string
+    {
+        return $this->slug;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDateStart(): string
+    {
+        return $this->dateStart;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDateEnd(): string
+    {
+        return $this->dateEnd;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAddress(): string
+    {
+        return $this->address;
+    }
+
+    /**
+     * @return string
+     */
+    public function getZip(): string
+    {
+        return $this->zip;
+    }
+
+    /**
+     * @return string
+     */
+    public function getCity(): string
+    {
+        return $this->city;
+    }
+
+    /**
+     * @return string
+     */
+    public function getState(): string
+    {
+        return $this->state;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHost(): string
+    {
+        return $this->host;
+    }
+
+    /**
+     * @return string
+     */
+    public function getContact(): string
+    {
+        return $this->contact;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isFeatured(): bool
+    {
+        return $this->isFeatured;
+    }
+
+    /**
+     * @return string
+     */
+    public function getHashtags(): string
+    {
+        return $this->hashtags;
+    }
+
+    /**
+     * @return int
+     */
+    public function getDuration(): int
+    {
+        return $this->duration;
+    }
+
+    /**
+     * @return string
+     */
+    public function getAttendees(): string
+    {
+        return $this->attendees;
+    }
+
+    /**
+     * @return string
+     */
+    public function getWebsite(): string
+    {
+        return $this->website;
+    }
+
+    /**
+     * @return string
+     */
+    public function getIntro()
+    {
+        return $this->intro;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isCancelled(): bool
+    {
+        return $this->isCancelled;
+    }
+
+    /**
+     * @return Collection
+     */
+    public function getParticipants(): Collection
+    {
+        return $this->participants;
     }
 }

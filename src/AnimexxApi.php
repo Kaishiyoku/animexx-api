@@ -4,11 +4,13 @@ namespace Kaishiyoku\AnimexxApi;
 
 use GuzzleHttp\Exception\GuzzleException;
 use Kaishiyoku\AnimexxApi\Exception\RequestException;
+use Kaishiyoku\AnimexxApi\Models\Event;
 use Kaishiyoku\AnimexxApi\Models\EventDescription;
 use Kaishiyoku\AnimexxApi\Models\EventType;
 use Kaishiyoku\AnimexxApi\Models\SerialEvent;
 use Kaishiyoku\AnimexxApi\Models\User;
 use Kaishiyoku\AnimexxApi\Responses\EventDescriptionsResponse;
+use Kaishiyoku\AnimexxApi\Responses\EventsResponse;
 use Kaishiyoku\AnimexxApi\Responses\EventTypesResponse;
 use Kaishiyoku\AnimexxApi\Responses\SerialEventsResponse;
 use Kaishiyoku\AnimexxApi\Responses\UsersResponse;
@@ -124,5 +126,29 @@ class AnimexxApi
         $json = $this->httpFetcher->fetchResource('get', '/event-descriptions/' . $id);
 
         return EventDescription::fromJson($json['data'], $this);
+    }
+
+    /**
+     * @param int $page
+     * @return EventsResponse
+     * @throws GuzzleException
+     */
+    public function fetchEvents(int $page) : EventsResponse
+    {
+        $json = $this->httpFetcher->fetchResource('get', '/events?page=' . $page);
+
+        return EventsResponse::fromJson($json, $this);
+    }
+
+    /**
+     * @param int $id
+     * @return Event
+     * @throws GuzzleException
+     */
+    public function fetchEvent(int $id): Event
+    {
+        $json = $this->httpFetcher->fetchResource('get', '/events/' . $id);
+
+        return Event::fromJson($json['data'], $this);
     }
 }

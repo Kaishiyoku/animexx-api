@@ -13,9 +13,9 @@ class EventDescription
     private $id;
 
     /**
-     * @var Collection<Event>
+     * @var Event
      */
-    private $events;
+    private $event;
 
     /**
      * @var string
@@ -56,7 +56,7 @@ class EventDescription
     }
 
     /**
-     * @param array $json
+     * @param array      $json
      * @param AnimexxApi $animexxApi
      * @return EventDescription
      */
@@ -73,17 +73,11 @@ class EventDescription
         $eventDescription->eventDescriptionDocuments = new Collection($attributes['eventDescriptionDocuments']);
         $eventDescription->title = $attributes['title'];
 
-        $events = new Collection();
+        callIfKeyExists(function () use ($animexxApi, &$event, $json) {
+            $event = $animexxApi->fetchEvent(filterInt($json['relationships']['event']['data']['id']));
+        }, 'relationships', $json);
 
-        callIfKeyExists(function () use ($animexxApi, &$events, $attributes) {
-            arrEach(function ($item) use ($animexxApi, &$events) {
-                $event = $animexxApi->fetchEvent(filterInt($item['id']));
-
-                $events->push($event);
-            }, $attributes['relationships']['event']);
-        }, 'relationships', $attributes);
-
-        $eventDescription->events = $events;
+        $eventDescription->event = $event;
 
         return $eventDescription;
     }
@@ -97,11 +91,11 @@ class EventDescription
     }
 
     /**
-     * @return Collection
+     * @return Event
      */
-    public function getEvents(): Collection
+    public function getEvent(): Event
     {
-        return $this->events;
+        return $this->event;
     }
 
     /**

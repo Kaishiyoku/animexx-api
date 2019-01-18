@@ -7,7 +7,7 @@ if (!function_exists('filterInt')) {
      */
     function filterInt($str)
     {
-        preg_match("/[-0-9]+/", $str, $matches);
+        preg_match("/-?[0-9]+/", $str, $matches);
 
         if (count($matches) == 0) {
             return null;
@@ -48,16 +48,53 @@ if (!function_exists('arrMap')) {
     }
 }
 
+if (!function_exists('arrFirst')) {
+    /**
+     * @param array $arr
+     * @return mixed
+     */
+    function arrFirst(array $arr)
+    {
+        return count($arr) > 0 ? $arr[0] : null;
+    }
+}
+
 if (!function_exists('callIfKeyExists')) {
     /**
      * @param callable $callback
-     * @param string   $key
+     * @param string   $path
      * @param array    $arr
      */
-    function callIfKeyExists(callable $callback, string $key, array $arr)
+    function callIfKeyExists(callable $callback, string $path, array $arr)
     {
-        if (array_key_exists($key, $arr)) {
+        if (arrGet($path, $arr)) {
             $callback();
+        }
+    }
+}
+
+if (!function_exists('arrGet')) {
+    /**
+     * @param string $key
+     * @param array  $arr
+     * @return mixed|null
+     */
+    function arrGet(string $key, array $arr)
+    {
+        $keyArr = explode('.', $key);
+
+        $firstKey = array_shift($keyArr);
+
+        if (count($keyArr) == 0 && array_key_exists($firstKey, $arr)) {
+            return $arr[$firstKey];
+        }
+
+        if (!is_array($arr) && count($keyArr) > 0) {
+            return null;
+        }
+
+        if (array_key_exists($firstKey, $arr)) {
+            return arrGet(implode('.', $keyArr), $arr[$firstKey]);
         }
     }
 }

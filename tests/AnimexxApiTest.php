@@ -5,6 +5,7 @@ namespace Kaishiyoku\AnimexxApi;
 use GuzzleHttp\Exception\ClientException;
 use Illuminate\Support\Collection;
 use Kaishiyoku\AnimexxApi\Exception\RequestException;
+use Kaishiyoku\AnimexxApi\Models\User;
 use PHPUnit\Framework\TestCase;
 use Spatie\Snapshots\MatchesSnapshots;
 
@@ -16,6 +17,20 @@ class AnimexxApiTest extends TestCase
      * @var AnimexxApi
      */
     protected $animexxApi;
+
+    protected $arr = [
+        'a' => [
+            'aa' => 'AA value',
+        ],
+        'b' => 'B value',
+        'c' => [
+            'cc' => 'CC value',
+            'cc2' => [
+                'ccc' => 'CCC value',
+                'ccc2' => 'CCC2 value',
+            ],
+        ],
+    ];
 
     protected function setUp()
     {
@@ -189,10 +204,25 @@ class AnimexxApiTest extends TestCase
     public function testFetchEventDescription()
     {
         $id = 12958;
+        $locale = 'de';
+        $isHtml = true;
+        $page = 1;
+        $eventDescriptionDocuments = new Collection();
+        $title = 'Allgemein';
+
+        $event = $this->animexxApi->fetchEvent(74648);
 
         $eventDescription = $this->animexxApi->fetchEventDescription($id);
 
         $this->assertEquals($id, $eventDescription->getId());
+        $this->assertEquals($locale, $eventDescription->getLocale());
+        $this->assertMatchesSnapshot($eventDescription->getContent());
+        $this->assertEquals($isHtml, $eventDescription->isHtml());
+        $this->assertEquals($page, $eventDescription->getPage());
+        $this->assertCount($eventDescriptionDocuments->count(), $eventDescription->getEventDescriptionDocuments());
+        $this->assertEquals($title, $eventDescription->getTitle());
+
+        $this->assertEquals($event->getId(), $eventDescription->getEvent()->getId());
     }
 
     public function testFetchEventDescriptionInvalidId()
@@ -200,5 +230,111 @@ class AnimexxApiTest extends TestCase
         $this->expectException(ClientException::class);
 
         $this->animexxApi->fetchEventDescription(-1);
+    }
+
+    public function testFetchEvents()
+    {
+        $eventsResponse = $this->animexxApi->fetchEvents(1);
+
+        $this->assertEquals($eventsResponse->getMeta()->getItemsPerPage(), $eventsResponse->getEvents()->count());
+    }
+
+    public function testFetchEvent()
+    {
+        $id = 59455;
+        $name = 'BRAWL ONE HAMBURG - Fighting Game Turnier #1';
+        $slug = 'brawl-one-hamburg---fighting-game-turnier-1';
+        $dateStart = '-0001-11-30T00:00:00+01:00';
+        $dateEnd = '-0001-11-30T00:00:00+01:00';
+        $address = '';
+        $zip = '';
+        $city = 'Hamburg';
+        $state = 'DE-HH';
+        $host = '';
+        $contact = '[[USERID=421436 (RoCkHoWaRd)]]';
+        $isFeatured = false;
+        $hashtags = '';
+        $duration = 0;
+        $attendees = 'k/A';
+        $website = '';
+        $intro = '';
+        $isCancelled = false;
+        $participants = new Collection([
+            $this->animexxApi->fetchUser(150926),
+            $this->animexxApi->fetchUser(192758),
+            $this->animexxApi->fetchUser(21532),
+            $this->animexxApi->fetchUser(22281),
+            $this->animexxApi->fetchUser(143137),
+            $this->animexxApi->fetchUser(9586),
+        ]);
+
+        $participantsMapper = function (User $user) {
+            return $user->getId();
+        };
+
+        $event = $this->animexxApi->fetchEvent($id);
+
+        $this->assertEquals($id, $event->getId());
+        $this->assertEquals($name, $event->getName());
+        $this->assertEquals($slug, $event->getSlug());
+        $this->assertEquals($dateStart, $event->getDateStart());
+        $this->assertEquals($dateEnd, $event->getDateEnd());
+        $this->assertEquals($address, $event->getAddress());
+        $this->assertEquals($zip, $event->getZip());
+        $this->assertEquals($city, $event->getCity());
+        $this->assertEquals($state, $event->getState());
+        $this->assertEquals($host, $event->getHost());
+        $this->assertEquals($contact, $event->getContact());
+        $this->assertEquals($isFeatured, $event->isFeatured());
+        $this->assertEquals($hashtags, $event->getHashtags());
+        $this->assertEquals($duration, $event->getDuration());
+        $this->assertEquals($attendees, $event->getAttendees());
+        $this->assertEquals($website, $event->getWebsite());
+        $this->assertEquals($intro, $event->getIntro());
+        $this->assertEquals($isCancelled, $event->isCancelled());
+        $this->assertEquals(13, $event->getType()->getId());
+        $this->assertEquals($participants->map($participantsMapper)->toArray(), $event->getParticipants()->map($participantsMapper)->toArray());
+    }
+
+    public function testCallIfKeyExists()
+    {
+        $valueA = false;
+        callIfKeyExists(function () use (&$valueA) {
+             $valueA = true;
+        }, 'a.aa', $this->arr);
+        $this->assertTrue($valueA);
+
+        $valueB = false;
+        callIfKeyExists(function () use (&$valueB) {
+            $valueB = true;
+        }, 'b', $this->arr);
+        $this->assertTrue($valueB);
+
+        $valueC = false;
+        callIfKeyExists(function () use (&$valueC) {
+            $valueC = true;
+        }, 'c.cc2.ccc', $this->arr);
+        $this->assertTrue($valueC);
+
+        $valueCNonexistent = false;
+        callIfKeyExists(function () use (&$valueCNonexistent) {
+            $valueCNonexistent = true;
+        }, 'c.cc3', $this->arr);
+        $this->assertfalse($valueCNonexistent);
+    }
+
+    public function testArrGet()
+    {
+        $valueA = arrGet('a.aa', $this->arr);
+        $this->assertEquals('AA value', $valueA);
+
+        $valueB = arrGet('b', $this->arr);
+        $this->assertEquals('B value', $valueB);
+
+        $valueC = arrGet('c.cc2.ccc', $this->arr);
+        $this->assertEquals('CCC value', $valueC);
+
+        $valueCNonexistent = arrGet('c.cc3', $this->arr);
+        $this->assertEquals(null, $valueCNonexistent);
     }
 }
